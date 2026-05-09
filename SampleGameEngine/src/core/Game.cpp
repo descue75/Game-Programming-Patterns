@@ -53,12 +53,17 @@ void Game::ProcessInput()
 
         if (command)
         {
-            command->Execute(*this, *m_character);
+			m_pendingCommands.push_back(std::move(command));
         }
     }
 }
 
 void Game::ProcessActions()
 {
-    // Future gameplay logic
+   for(auto& command : m_pendingCommands)
+   {
+       command->Execute(*this, *m_character);
+       // TODO: move command to game history
+   }
+   m_pendingCommands.clear();
 }
